@@ -34,7 +34,10 @@
 @echo off
 title video-cmd console
 
+rem The main app and the console are bridged together by these files: ".frame", ".framemax", ".paus", etc. They will be described below.
+
 :read
+rem Detects the number of frames the video has, by reading the data from the main app.
 < .framemax (
 set /p framemax=
 )
@@ -51,6 +54,7 @@ goto comm
 
 :comm
 set /p comm=">>"
+rem This is the list of the commands.
 if %comm% == paus goto pause
 if %comm% == unpaus goto unpause
 if %comm% == captur goto capture_mode
@@ -71,12 +75,14 @@ if not defined %comm% goto invalid
 goto comm
 
 :invalid
+rem Directs to this scene when the user makes mistakes.
 echo.
 echo Invalid command or value
 echo.
 goto comm
 
 :pause
+rem Sends the pause signal to the main app.
 echo. > .paus
 echo.
 echo Video paused.
@@ -84,6 +90,7 @@ echo.
 goto comm
 
 :unpause
+rem Returns the pause signal so the main app can continue playing.
 del .paus
 echo.
 echo Video unapused.
@@ -91,6 +98,8 @@ echo.
 goto comm
 
 :capture_mode
+rem Allows users to save a frame of the video.
+rem Either choose a frame or the one that is paused.
 echo.
 echo How do you want to capture?
 echo 1. Pick a ramdom frame
@@ -146,6 +155,8 @@ echo.
 goto comm
 
 :jump
+rem Jumps to a specific frame chosen by the user.
+rem Only takes effect when the video is running or unpaused.
 echo.
 echo Which frame do you want to jump to?
 echo Say, we have %framemax% frames in total.
